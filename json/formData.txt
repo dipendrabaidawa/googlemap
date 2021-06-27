@@ -1,0 +1,25 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					27.77343749999998,
+					2.8113711933311407
+				]
+			},
+			"properties": {
+				"sector": "d",
+				"row": "sa",
+				"line": "asa",
+				"module": "sa",
+				"delta": "sa",
+				"irradiation": "asa",
+				"level": "lev2",
+				"image": "images/Screenshot (10).png"
+			}
+		}
+	]
+}
