@@ -223,7 +223,7 @@ $(document ).ready(function() {
             level:selectedRadio,
 
         });
-
+        console.log("Selected Features: ", selectedFeature);
     })
 
 
