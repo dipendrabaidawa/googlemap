@@ -248,6 +248,20 @@ $(document ).ready(function() {
 
 
     $("#btn_delete").click(function () {
+        var features=markerSource.getFeatures();
+        let i = 0;
+        for (i = 0; i < features.length; ++ i) {
+            var coords = features[i].getProperties()['coords'];
+            if (coords == $('#in_coordinates').val()) break;
+        }
+        if (i != features.length) {
+            features.splice(i, 1)
+            markerSource.clear();
+            markerSource.addFeatures(features);
+            featureID=features.length-1;
+            selectMarker(features,featureID);
+        }
+
         $("#in_sector").val("");
         $("#in_row").val("");
         $("#in_line").val("");
@@ -259,7 +273,6 @@ $(document ).ready(function() {
         $( ".radio input[type=radio][name=level]").each(function (index,element) {
           $(element).prop("checked", false);
         });
-
     })
     $("#btn_draw_new_box").click(function () {
         $( ".modal-content" ).draggable({ disabled: true });
