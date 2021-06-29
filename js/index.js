@@ -74,6 +74,7 @@ function addInteractions() {
             module:"",
             delta:"",
             irradiation:"",
+            notification: "",
             level:"",
             image:"images/noimage.png"
         })
@@ -220,6 +221,7 @@ $(document ).ready(function() {
             module:$("#in_module").val(),
             delta:$("#in_delta").val(),
             irradiation:$("#in_irradiation").val(),
+            notification:$("#in_notification").val(),
             level:selectedRadio,
 
         });
@@ -245,6 +247,7 @@ $(document ).ready(function() {
         $("#in_module").val("");
         $("#in_delta").val("");
         $("#in_irradiation").val("");
+        $("#in_notification").val("");
         $( ".radio input[type=radio][name=level]").each(function (index,element) {
           $(element).prop("checked", false);
         });
@@ -297,9 +300,12 @@ $(document ).ready(function() {
                                 row:row.row,
                                 line:row.line,
                                 module:row.module,
+                                coords:row.coords,
                                 delta:row.delta,
                                 irradiation:row.irradiation,
                                 level:row.level,
+                                notification: row.notification,
+                                image:row.image
                             }
                             var coords=row.coords;
                             coords = coords.split(" ");
@@ -359,7 +365,9 @@ $(document ).ready(function() {
                 coords:coordinates[0]+" "+coordinates[1],
                 delta:properties.delta,
                 irradiation:properties.irradiation,
+                notification: properties.notification,
                 level:properties.level,
+                image: properties.image
             })
 
         }
@@ -388,7 +396,7 @@ $(document ).ready(function() {
 
         featureID--;
         if(featureID<0)
-            featureID=0
+            featureID=markerFeatures.length-1
 
         selectMarker(markerFeatures,featureID);
 
@@ -399,7 +407,7 @@ $(document ).ready(function() {
 
         featureID++;
         if(featureID>=markerFeatures.length){
-            featureID=markerFeatures.length-1;
+            featureID=0;
         }
         selectMarker(markerFeatures,featureID);
 
@@ -410,7 +418,18 @@ const selectMarker=(markerFeatures,featureID)=>{
     var properties=selectedFeature.getProperties();
     var imgSrc=properties["image"];
     $("#img").attr("src", imgSrc);
-
+    $('#in_sector').val(properties['sector'])
+    $('#in_row').val(properties['row'])
+    $('#in_line').val(properties['line'])
+    $('#in_module').val(properties['module'])
+    $('#in_coordinates').val(properties['coords'])
+    $('#in_delta').val(properties['delta'])
+    $('#in_irradiation').val(properties['irradiation'])
+    $('#in_notification').val(properties['notification'])
+    var value = properties['level'];
+    var radio = $("input[name=level][value=" + value + "]")
+    console.log("radio value: ", value, radio, properties['coords'])
+    radio.prop('checked', true);
     selectSource.clear();
     var feature=new ol.Feature(selectedFeature.getGeometry());
     selectSource.addFeature(feature);
