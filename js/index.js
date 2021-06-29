@@ -313,7 +313,8 @@ $(document ).ready(function() {
                     markerSource.clear();
                     var features=[];
                     $.ajax(response).then(function(res) {
-                        const obj = JSON.parse(res);
+                        console.log("OBJ RESPONSE: ", res)
+                        const obj = res
                         for(var i=0;i<obj.length;i++){
                             var row=obj[i];
                             var properties={
@@ -333,7 +334,7 @@ $(document ).ready(function() {
                             coords=[Number(coords[0].toString()),Number(coords[1].toString())];
                             var pt=new ol.geom.Point(coords);
                             pt=pt.clone().transform("EPSG:4326","EPSG:3857");
-
+                            console.log("properties", properties)
                             var f=new ol.Feature({geometry:pt});
                             f.setProperties(properties);
                             features.push(f);
@@ -380,14 +381,14 @@ $(document ).ready(function() {
 
             outPuts.push({
                 sector:properties.sector,
-                row:properties.row,
-                line:properties.line,
+                row:parseInt(properties.row, 10),
+                line:parseInt(properties.line, 10),
                 module:properties.module,
                 coords:coordinates[0]+" "+coordinates[1],
                 delta:properties.delta,
                 irradiation:properties.irradiation,
                 information: properties.notification,
-                status:properties.level,
+                status:parseInt(properties.level, 10),
                 image: properties.image
             })
 
