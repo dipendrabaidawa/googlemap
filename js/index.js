@@ -67,6 +67,11 @@ function addInteractions() {
 
     draw.on('drawend', function (e) {
         var currentFeature = e.feature;//this is the feature fired the event
+        var f=currentFeature,
+            properties=f.getProperties(),
+            geometry=f.getGeometry().clone().transform("EPSG:3857","EPSG:4326"),
+            coordinates=geometry.getCoordinates();
+
         currentFeature.setProperties({
             sector:"",
             row:"",
@@ -76,7 +81,8 @@ function addInteractions() {
             irradiation:"",
             notification: "",
             level:"",
-            image:"images/noimage.png"
+            image:"images/noimage.png",
+            coords: coordinates[0]+" "+coordinates[1],
         })
         featureID=markerSource.getFeatures().length;
 
@@ -164,7 +170,9 @@ $(document ).ready(function() {
     $("#img").click(function () {
         $( ".modal-content" ).draggable({ disabled: false });
         $('#dialog').show(100);
-
+        var features=markerSource.getFeatures();
+        $('#in_coordinates').val(features[featureID].getProperties()['coords'])
+        console.log("featureID: ", featureID, features[featureID].getProperties()['coords'])
     });
 
     $("#btn_upload_image").click(function () {
@@ -303,8 +311,8 @@ $(document ).ready(function() {
                                 coords:row.coords,
                                 delta:row.delta,
                                 irradiation:row.irradiation,
-                                level:row.level,
-                                notification: row.notification,
+                                level:row.status,
+                                notification: row.information,
                                 image:row.image
                             }
                             var coords=row.coords;
@@ -365,8 +373,8 @@ $(document ).ready(function() {
                 coords:coordinates[0]+" "+coordinates[1],
                 delta:properties.delta,
                 irradiation:properties.irradiation,
-                notification: properties.notification,
-                level:properties.level,
+                information: properties.notification,
+                status:properties.level,
                 image: properties.image
             })
 
@@ -375,7 +383,7 @@ $(document ).ready(function() {
         var jsonPretty = JSON.stringify(outPuts, null, '\t');
 
         const textToBLOB = new Blob([jsonPretty], { type: 'text/plain' });
-        const sFileName = 'result.geojson';	   // The file to save the data.
+        const sFileName = 'result.json';	   // The file to save the data.
 
         var newLink = document.createElement("a");
         newLink.download = sFileName;
