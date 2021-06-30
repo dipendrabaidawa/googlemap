@@ -162,6 +162,10 @@ $(document ).ready(function() {
             boxDrawing=null;
 
             boxDrawing=new Drawing(canvas,$("#img").attr("src"));
+
+            var features=markerSource.getFeatures();
+            $('#in_coordinates').val(features[featureID].getProperties()['coords'])
+            console.log("featureID: ", featureID, features[featureID].getProperties()['coords'])
         })
         .bind('show',function () {
             alert('show');
@@ -170,9 +174,6 @@ $(document ).ready(function() {
     $("#img").click(function () {
         $( ".modal-content" ).draggable({ disabled: false });
         $('#dialog').show(100);
-        var features=markerSource.getFeatures();
-        $('#in_coordinates').val(features[featureID].getProperties()['coords'])
-        console.log("featureID: ", featureID, features[featureID].getProperties()['coords'])
     });
 
     $("#btn_upload_image").click(function () {
@@ -234,6 +235,36 @@ $(document ).ready(function() {
 
         });
         console.log("Selected Features: ", selectedFeature);
+
+        var fd = new FormData();
+        var files = document.getElementById('dialog_img').toDataURL();
+        var filepath = document.getElementById("file").value;
+        var filename = filepath.split("\\").pop();
+        fd.append('file', files);
+        fd.append('path','images/');
+        fd.append('filename', filename);
+
+        $.ajax({
+            url: 'upload.php',
+            type: 'post',
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                if(response != 0){
+
+                    $("#img").attr("src", response);
+
+                    selectedFeature.setProperties({image:response});
+
+                    alert('file uploaded');
+
+                }
+                else{
+                    alert("Upload failed");
+                }
+            },
+        });
     })
 
 
@@ -302,7 +333,7 @@ $(document ).ready(function() {
         fd.append('path','json/');
 
         $.ajax({
-            url: 'upload.php',
+            url: 'upload_geojson.php',
             type: 'post',
             data: fd,
             contentType: false,
@@ -311,8 +342,10 @@ $(document ).ready(function() {
                 if(response != 0){
                     alert('file uploaded');
                     markerSource.clear();
+                    console.log("path", response)
                     var features=[];
                     $.ajax(response).then(function(res) {
+
                         console.log("OBJ RESPONSE: ", res)
                         const obj = res
                         for(var i=0;i<obj.length;i++){
