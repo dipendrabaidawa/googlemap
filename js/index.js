@@ -160,7 +160,7 @@ $(document ).ready(function() {
 
             console.log("initialize");
             boxDrawing=null;
-
+            
             boxDrawing=new Drawing(canvas,$("#img").attr("src"));
 
             var features=markerSource.getFeatures();
@@ -537,11 +537,12 @@ class Drawing {
     handleMouseDown(e){
         e.preventDefault();
         e.stopPropagation();
-
+        // console.log(e)
+        console.log($('div.modal-content').offset(), $('canvas').offset(), e.clientX, e.clientY, e.offsetX, e.offsetY)
         // save the starting x/y of the rectangle
-        this.startX=parseInt(e.clientX-this.offsetX);
-        this.startY=parseInt(e.clientY-this.offsetY);
-
+        this.startX=e.offsetX // parseInt(e.clientX-this.offsetX);
+        this.startY=e.offsetY // parseInt(e.clientY-this.offsetY);
+        // console.log("Down Point: ", this.startX, this.startY, this.offsetX, this.offsetY)
         // set a flag indicating the drag has begun
         this.isDown=true;
     }
@@ -557,11 +558,11 @@ class Drawing {
         // get the current mouse position
         var mouseX=parseInt(e.clientX-this.offsetX);
         var mouseY=parseInt(e.clientY-this.offsetY);
-
+        console.log("MOVE POINT: ", mouseX, mouseY, this.offsetX, this.offsetY)
         // calculate the rectangle width/height based
         // on starting vs current mouse position
-        var width=mouseX-this.startX;
-        var height=mouseY-this.startY;
+        var width=e.offsetX - this.startX  // mouseX-this.startX;
+        var height=e.offsetY - this.startY // mouseY-this.startY;
 
         // draw a new rect from the start position
         // to the current mouse position
@@ -591,7 +592,7 @@ class Drawing {
             }
 
         });
-
+        console.log("strokestyle: ", _self.context.strokeStyle, this.startX, this.startY,    width, height)
         this.context.strokeRect(this.startX,this.startY,width,height);
         this.context.closePath();
 
@@ -619,8 +620,8 @@ class Drawing {
         if(this.isDown && this.isBox){
             var mouseX=parseInt(e.clientX-this.offsetX);
             var mouseY=parseInt(e.clientY-this.offsetY);
-            var width=mouseX-this.startX;
-            var height=mouseY-this.startY;
+            var width=e.offsetX - this.startX // mouseX-this.startX;
+            var height=e.offsetY-this.startY // mouseY-this.startY;
             this.boxes.push(new Box(this.startX,this.startY,width,height,this.context.strokeStyle));
             this.drawBoxes();
 
