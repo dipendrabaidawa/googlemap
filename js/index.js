@@ -239,11 +239,14 @@ $(document ).ready(function() {
         var fd = new FormData();
         var files = document.getElementById('dialog_img').toDataURL();
         var filepath = document.getElementById("file").value;
-        var filename = filepath.split("\\").pop();
+        var filename =  $("#in_sector").val() + "-" + $("#in_row").val() + "-" + $("#in_line").val() + "-" + $("#in_module").val() + "." + filepath.split("\\").pop();
         fd.append('file', files);
         fd.append('path','images/');
         fd.append('filename', filename);
-
+        fd.append('sector', $("#in_sector").val())
+        fd.append('row', $("#in_row").val())
+        fd.append('line', $("#in_line").val())
+        fd.append('module', $("#in_module").val())
         $.ajax({
             url: 'upload.php',
             type: 'post',
@@ -262,6 +265,7 @@ $(document ).ready(function() {
                 }
                 else{
                     alert("Upload failed");
+                    $('#dialog').hide(100);
                 }
             },
         });
@@ -426,8 +430,25 @@ $(document ).ready(function() {
             })
 
         }
-
         var jsonPretty = JSON.stringify(outPuts, null, '\t');
+
+        var tmp_form = document.createElement('form');
+        tmp_form.action = ""
+        tmp_form.method = "POST"
+        var tmp_input = document.createElement('input');
+        tmp_input.name = "json_data"
+        tmp_input.value= jsonPretty
+        tmp_form.appendChild(tmp_input);
+        console.log(jsonPretty)
+        console.log(tmp_form);
+        tmp_submit = document.createElement('button')
+        tmp_submit.type = "submit"
+        tmp_form.appendChild(tmp_submit);
+        document.getElementById('hidden_form').appendChild(tmp_form)
+        tmp_submit.click()
+       
+        
+        /* var jsonPretty = JSON.stringify(outPuts, null, '\t');
 
         const textToBLOB = new Blob([jsonPretty], { type: 'text/plain' });
         const sFileName = 'result.json';	   // The file to save the data.
@@ -443,7 +464,7 @@ $(document ).ready(function() {
             newLink.style.display = "none";
             document.body.appendChild(newLink);
         }
-        newLink.click();
+        newLink.click(); */
     })
     $(".prev").click(function () {
         var markerFeatures=markerSource.getFeatures();

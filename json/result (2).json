@@ -1,0 +1,26 @@
+[
+	{
+		"sector": "5",
+		"row": 2,
+		"line": 3,
+		"module": "3",
+		"coords": "41.04378748421719 13.999986691560196",
+		"delta": "3",
+		"irradiation": "3",
+		"information": "3",
+		"status": 3,
+		"image": "images/3.PNG"
+	},
+	{
+		"sector": "5",
+		"row": 2,
+		"line": 3,
+		"module": "3",
+		"coords": "61.04378748421719 13.999986691560196",
+		"delta": "3",
+		"irradiation": "3",
+		"information": "3",
+		"status": 3,
+		"image": "images/3.PNG"
+	}
+]

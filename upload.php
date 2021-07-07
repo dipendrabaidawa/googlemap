@@ -5,11 +5,23 @@
 $path = $_POST["path"];
 $img = $_POST['file'];
 
+$sector = $_POST['sector'];
+$line = $_POST['line'];
+$row = $_POST['row'];
+$module = $_POST['module'];
+
 $img = str_replace('data:image/png;base64,', '', $img);
 $img = str_replace(' ', '+', $img);
 $data = base64_decode($img);
-$file = $path.$_POST['filename'];
+$dir =  $path . "/$sector-$row-$line-$module/";
+if( is_dir($dir) === false )
+{
+    mkdir($dir);
+}
+$file = $path . "/$sector-$row-$line-$module/" . $_POST['filename'];
+
 $success = file_put_contents($file, $data);
+
 if($success) {
    echo $file;
 } else {
